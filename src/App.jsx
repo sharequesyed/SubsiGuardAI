@@ -28,6 +28,7 @@ import { soundFx } from './services/soundEffects';
 import { offlineStorage } from './services/offlineStorage';
 import { usbGateway } from './services/usbGateway';
 import { mqttGateway } from './services/mqttGateway';
+import { notificationService } from './services/notificationService';
 import { estimateTimeToFailure, discriminateVibrationSource } from './utils/geotechMath';
 
 export default function App() {
@@ -43,6 +44,7 @@ export default function App() {
   const [offlineStats, setOfflineStats] = useState(offlineStorage.getStats());
   const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
   const [isWokwiDocsOpen, setIsWokwiDocsOpen] = useState(false);
+  const [notifPermission, setNotifPermission] = useState(notificationService.getPermission());
 
   // Operational Mode: 'demo' (built-in scenario simulator) vs 'sim3d' (interactive 3D hardware rig) vs 'usb' (live ESP32 Gateway via Web Serial)
   const [dataMode, setDataMode] = useState('demo');
@@ -128,6 +130,31 @@ export default function App() {
     return unsub;
   }, []);
 
+  // Listen to notification permission changes
+  useEffect(() => {
+    const unsub = notificationService.subscribe((perm) => {
+      setNotifPermission(perm);
+    });
+    return unsub;
+  }, []);
+
+  const handleRequestNotificationPermission = async () => {
+    const perm = await notificationService.requestPermission();
+    setNotifPermission(perm);
+    if (perm === 'granted') {
+      notificationService.notifyTestAlert();
+    }
+    return perm;
+  };
+
+  const handleTestNotification = async () => {
+    if (notifPermission === 'granted') {
+      notificationService.notifyTestAlert();
+    } else {
+      await handleRequestNotificationPermission();
+    }
+  };
+
   // Toggle Theme
   const handleToggleTheme = () => {
     setCurrentTheme(prev => prev === 'light' ? 'dark' : 'light');
@@ -141,6 +168,13 @@ export default function App() {
     } else {
       soundFx.startSiren();
       setIsSirenActive(true);
+      notificationService.notifyCriticalSubsidence({
+        mineName: activeMine.name,
+        tiltX: telemetryStream.tiltX || 0.85,
+        crackMm: telemetryStream.crackWidthMm || 7.4,
+        strainMmM: telemetryStream.strainMmM || 5.8,
+        sector: activeMine.surfaceAssets[0]
+      });
     }
   };
 
@@ -199,10 +233,24 @@ export default function App() {
       return next;
     });
 
-    // 4. Trigger audio alarm if critical limit breached (>0.57° or status CRITICAL)
+    // 4. Trigger audio alarm and OS desktop notification if limit breached
     if (packet.status === 'CRITICAL' || packet.tiltX > 0.57) {
       setVelocityHistory([0.25, 0.65, 1.25, 2.45]);
       soundFx.playWarningChirp(1000, 0.2);
+      notificationService.notifyCriticalSubsidence({
+        mineName: activeMine.name,
+        tiltX: packet.tiltX,
+        crackMm: packet.crackWidthMm,
+        strainMmM: packet.strainMmM,
+        sector: activeMine.surfaceAssets[0]
+      });
+    } else if (packet.status === 'WARNING' || packet.tiltX > 0.25) {
+      notificationService.notifyWarningSubsidence({
+        mineName: activeMine.name,
+        tiltX: packet.tiltX,
+        crackMm: packet.crackWidthMm,
+        sector: activeMine.surfaceAssets[0]
+      });
     }
   };
 
@@ -371,6 +419,14 @@ export default function App() {
       soundFx.playWarningChirp(1000, 0.3);
       if (!isSirenActive) {
         handleToggleSiren();
+      } else {
+        notificationService.notifyCriticalSubsidence({
+          mineName: activeMine.name,
+          tiltX: 0.85,
+          crackMm: 7.4,
+          strainMmM: 5.8,
+          sector: activeMine.surfaceAssets[0]
+        });
       }
       setVelocityHistory([0.15, 0.45, 0.95, 1.85]);
       // Auto-focus on Critical Node N05 (Trough center)
@@ -386,6 +442,12 @@ export default function App() {
       if (isSirenActive) handleToggleSiren();
       const creepNode = nextNodes.find(n => n.id === 'N05');
       if (creepNode) setSelectedNode(creepNode);
+      notificationService.notifyWarningSubsidence({
+        mineName: activeMine.name,
+        tiltX: 0.35,
+        crackMm: 2.8,
+        sector: activeMine.surfaceAssets[0]
+      });
     } else if (scenario === 'reroute') {
       setDisabledNodeIds(prev => prev.includes('N04') ? prev : [...prev, 'N04']);
       if (isSirenActive) handleToggleSiren();
@@ -560,6 +622,8 @@ export default function App() {
         onOpenTeamModal={() => setIsTeamModalOpen(true)}
         dataMode={dataMode}
         onSwitchMode={handleSwitchMode}
+        notifPermission={notifPermission}
+        onTestNotification={handleTestNotification}
       />
 
       {/* Main Operational Tab Navigation */}
@@ -705,6 +769,9 @@ export default function App() {
             isSirenActive={isSirenActive}
             onToggleSiren={handleToggleSiren}
             telemetryStream={telemetryStream}
+            notifPermission={notifPermission}
+            onRequestPermission={handleRequestNotificationPermission}
+            onTestNotification={handleTestNotification}
           />
         )}
       </main>

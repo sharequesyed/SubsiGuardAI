@@ -13,7 +13,9 @@ import {
   ExternalLink,
   Activity,
   Box,
-  Usb
+  Usb,
+  Bell,
+  BellRing
 } from 'lucide-react';
 import { soundFx } from '../services/soundEffects';
 
@@ -29,7 +31,9 @@ export function Navbar({
   onSyncOffline,
   onOpenTeamModal,
   dataMode = 'demo',
-  onSwitchMode
+  onSwitchMode,
+  notifPermission = 'default',
+  onTestNotification
 }) {
   return (
     <header className="top-navbar">
@@ -137,6 +141,25 @@ export function Navbar({
         >
           {isSirenActive ? <VolumeX size={16} /> : <Volume2 size={16} />}
           <span>{isSirenActive ? 'SILENCE SIREN' : 'TEST SIREN'}</span>
+        </button>
+
+        {/* Desktop Web Notification Toggle & Test */}
+        <button 
+          className="btn-icon" 
+          onClick={onTestNotification} 
+          title={
+            notifPermission === 'granted'
+              ? 'Desktop Web Notifications Active (Click to send test alert)'
+              : 'Click to Enable Windows/Desktop Web Push Notifications'
+          }
+          aria-label="Desktop Web Notifications"
+          id="desktop-notif-btn"
+          style={{
+            borderColor: notifPermission === 'granted' ? 'var(--color-safe-border)' : 'var(--border-color)',
+            color: notifPermission === 'granted' ? 'var(--color-safe)' : 'var(--text-secondary)'
+          }}
+        >
+          {notifPermission === 'granted' ? <BellRing size={17} /> : <Bell size={17} />}
         </button>
 
         {/* Theme Switcher Toggle (Default Light -> Dark Mode) */}

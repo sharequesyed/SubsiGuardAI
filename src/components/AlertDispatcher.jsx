@@ -8,21 +8,30 @@ import {
   Download, 
   Volume2, 
   Radio, 
-  CheckCircle2,
-  FileText,
-  Building2
+  CheckCircle2, 
+  FileText, 
+  Building2,
+  Monitor,
+  BellRing,
+  ExternalLink,
+  Layers
 } from 'lucide-react';
+import { notificationService } from '../services/notificationService';
 
 export function AlertDispatcher({ 
   activeMine, 
   currentScenario, 
-  severityIndex,
-  isSirenActive,
-  onToggleSiren,
-  telemetryStream 
+  severityIndex, 
+  isSirenActive, 
+  onToggleSiren, 
+  telemetryStream,
+  notifPermission = 'default',
+  onRequestPermission,
+  onTestNotification
 }) {
   const [selectedLang, setSelectedLang] = useState('hindi');
   const [showExportModal, setShowExportModal] = useState(false);
+  const [justSentToast, setJustSentToast] = useState(false);
 
   // Multilingual SMS contents
   const smsTemplates = {
@@ -38,6 +47,28 @@ export function AlertDispatcher({
     window.print();
   };
 
+  const handleTriggerTestNotif = async () => {
+    if (onTestNotification) {
+      onTestNotification();
+    } else {
+      notificationService.notifyTestAlert();
+    }
+    setJustSentToast(true);
+    setTimeout(() => setJustSentToast(false), 3000);
+  };
+
+  const handleTriggerCriticalNotif = () => {
+    notificationService.notifyCriticalSubsidence({
+      mineName: activeMine.name,
+      tiltX: telemetryStream.tiltX || 0.85,
+      crackMm: telemetryStream.crackWidthMm || 7.4,
+      strainMmM: telemetryStream.strainMmM || 5.8,
+      sector: activeMine.surfaceAssets[0]
+    });
+    setJustSentToast(true);
+    setTimeout(() => setJustSentToast(false), 3000);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       {/* Top Banner */}
@@ -48,7 +79,7 @@ export function AlertDispatcher({
             Automated Multi-Channel Early Warning & Escalation Dispatcher
           </h4>
           <p>
-            Delivers critical alerts through <strong>Physical On-Site Audio Sirens</strong>, <strong>Highway Smart LED Signs</strong>, and <strong>Multilingual Geofenced Telecom SMS</strong> without requiring smartphones.
+            Delivers critical alerts through <strong>Windows/PC Desktop Notifications</strong>, <strong>Physical On-Site Sirens</strong>, <strong>Highway Variable Message Signs</strong>, and <strong>Multilingual Geofenced SMS</strong>.
           </p>
         </div>
         <button 
@@ -58,6 +89,149 @@ export function AlertDispatcher({
           <Volume2 size={16} />
           <span>{isSirenActive ? 'SILENCE AUDIO SIREN' : 'TRIGGER AUDIO SIREN'}</span>
         </button>
+      </div>
+
+      {/* NEW: Native Web Desktop & OS Action Center Push Notification Hub */}
+      <div className="card" style={{ borderLeft: isCritical ? '4px solid #ef4444' : (isWarning ? '4px solid #f59e0b' : '4px solid var(--brand-primary)') }}>
+        <div className="card-header">
+          <div>
+            <h3 className="card-title">
+              <Monitor size={17} style={{ color: 'var(--brand-primary)' }} />
+              Native Desktop Web Push Notifications (Windows Action Center & macOS Banners)
+            </h3>
+            <div className="card-desc">
+              Pushes OS-level pop-up alert banners directly to pithead workstations even when the browser is minimized
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <span className={`badge ${notifPermission === 'granted' ? 'badge-safe' : (notifPermission === 'denied' ? 'badge-critical' : 'badge-warning')}`}>
+              <span className="status-pulse-dot" style={{ width: 6, height: 6 }}></span>
+              {notifPermission === 'granted' ? 'OS NOTIFICATIONS ACTIVE' : (notifPermission === 'denied' ? 'BLOCKED IN BROWSER' : 'REQUIRES PERMISSION')}
+            </span>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', alignItems: 'center' }}>
+          {/* Windows Action Center Desktop Notification Banner Mockup */}
+          <div style={{
+            background: '#18181b',
+            border: '1px solid #27272a',
+            borderRadius: '8px',
+            padding: '1rem',
+            color: '#ffffff',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            {/* Windows Notification Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.72rem', color: '#a1a1aa' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <div style={{ width: 16, height: 16, borderRadius: '4px', background: 'var(--brand-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '10px' }}>
+                  <Layers size={10} />
+                </div>
+                <strong style={{ color: '#e4e4e7' }}>SubsiGuard Alert System</strong>
+              </div>
+              <span>Just now</span>
+            </div>
+
+            {/* Notification Title & Body */}
+            <div style={{ fontWeight: 700, fontSize: '0.85rem', color: isCritical ? '#f87171' : (isWarning ? '#fbbf24' : '#38bdf8'), marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <BellRing size={14} />
+              <span>
+                {isCritical 
+                  ? 'CRITICAL SUBSIDENCE EVACUATION ALERT' 
+                  : (isWarning ? 'SECONDARY CREEP ADVISORY' : 'NORMAL MONITORING ACTIVE')}
+              </span>
+            </div>
+
+            <div style={{ fontSize: '0.78rem', color: '#d4d4d8', lineHeight: '1.4', marginBottom: '0.75rem' }}>
+              {isCritical ? (
+                <>CRITICAL BREACH over <strong>{activeMine.name}</strong>: Surface Tilt <strong>{telemetryStream.tiltX || 0.85}°</strong> | Crack <strong>{telemetryStream.crackWidthMm || 7.4}mm</strong>. Immediate evacuation advised!</>
+              ) : isWarning ? (
+                <>Deformation Warning at <strong>{activeMine.name}</strong> ({activeMine.surfaceAssets[0]}): Surface Tilt <strong>{telemetryStream.tiltX || 0.35}°</strong> | Crack <strong>{telemetryStream.crackWidthMm || 2.8}mm</strong>.</>
+              ) : (
+                <>All 36 localized LoRa surface mesh nodes reporting normal steady state across {activeMine.name}. Permissible baseline.</>
+              )}
+            </div>
+
+            {/* Windows Banner Action Buttons */}
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div style={{
+                background: isCritical ? '#ef4444' : '#27272a',
+                color: '#ffffff',
+                padding: '0.3rem 0.75rem',
+                borderRadius: '4px',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                textAlign: 'center'
+              }}>
+                {isCritical ? 'Acknowledge & Evacuate' : 'View Strata Inclinometer'}
+              </div>
+              <div style={{
+                background: '#27272a',
+                color: '#a1a1aa',
+                padding: '0.3rem 0.75rem',
+                borderRadius: '4px',
+                fontSize: '0.72rem'
+              }}>
+                Dismiss
+              </div>
+            </div>
+          </div>
+
+          {/* Notification Controls & Browser Status */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+              <strong>Browser Push Protocol:</strong> When Ground Subsidence breaches DGMS statutory thresholds (Tilt &gt;0.57° or Crack &gt;5mm), SubsiGuard pushes native OS-level notifications to your Windows Action Center taskbar tray, even when this browser tab is backgrounded.
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              {notifPermission !== 'granted' ? (
+                <button 
+                  className="btn-primary"
+                  onClick={onRequestPermission || handleTriggerTestNotif}
+                  id="enable-browser-notif-btn"
+                >
+                  <Bell size={14} />
+                  <span>Enable Desktop Push Notifications</span>
+                </button>
+              ) : (
+                <button 
+                  className="btn-primary"
+                  onClick={handleTriggerTestNotif}
+                  id="test-browser-notif-btn"
+                >
+                  <BellRing size={14} />
+                  <span>Send Test Windows Desktop Notification</span>
+                </button>
+              )}
+
+              <button 
+                className="btn-secondary"
+                onClick={handleTriggerCriticalNotif}
+                style={{ borderColor: 'var(--color-critical-border)', color: 'var(--color-critical)' }}
+                title="Simulate immediate critical evacuation desktop popup"
+              >
+                <AlertTriangle size={14} />
+                <span>Simulate Critical Desktop Popup</span>
+              </button>
+            </div>
+
+            {justSentToast && (
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                color: 'var(--color-safe)',
+                fontSize: '0.75rem',
+                fontWeight: 600
+              }}>
+                <CheckCircle2 size={14} />
+                <span>Notification dispatched to Windows Action Center! Look at bottom-right of your screen.</span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Main Grid: SMS Simulator & Highway Smart LED VMS */}
