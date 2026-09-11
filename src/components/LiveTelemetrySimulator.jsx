@@ -418,7 +418,7 @@ export function LiveTelemetrySimulator({
           </div>
 
           {/* Chart View Switcher */}
-          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <button 
               className={`btn-secondary ${activeTab === 'tilt' ? 'active' : ''}`}
               onClick={() => setActiveTab('tilt')}
@@ -440,7 +440,7 @@ export function LiveTelemetrySimulator({
             >
               Micro-Vibration
             </button>
-            <span className={`badge ${isUsbStandby ? 'badge-warning' : 'badge-safe'}`} style={{ marginLeft: '0.5rem' }}>
+            <span className={`badge ${isUsbStandby ? 'badge-warning' : 'badge-safe'}`} style={{ marginLeft: '0.2rem' }}>
               <span className="status-pulse-dot" style={{ width: '6px', height: '6px' }}></span>
               {isUsbStandby ? 'USB STANDBY' : 'LIVE STREAM'}
             </span>
@@ -448,7 +448,7 @@ export function LiveTelemetrySimulator({
         </div>
 
         {/* Legend for active chart */}
-        <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.75rem', marginBottom: '0.75rem', paddingLeft: '55px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', fontSize: '0.75rem', marginBottom: '0.75rem', paddingLeft: '0.5rem' }}>
           {activeTab === 'tilt' && (
             <>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
@@ -508,10 +508,10 @@ export function LiveTelemetrySimulator({
           )}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.65rem', fontSize: '0.72rem', color: 'var(--text-muted)', paddingLeft: '55px' }}>
-          <span>← Rolling History (Last 30 Time Steps)</span>
-          <span>Sampling Rate: 1 Sample/Second (Event-triggered continuous streaming)</span>
-          <span>Latest Live Timestamp ({latestTime} IST) →</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.65rem', fontSize: '0.72rem', color: 'var(--text-muted)', paddingLeft: '0.5rem', paddingRight: '0.5rem' }}>
+          <span>← Rolling History (30s)</span>
+          <span>1 Sample/Sec Event Stream</span>
+          <span>Timestamp ({latestTime} IST) →</span>
         </div>
       </div>
 

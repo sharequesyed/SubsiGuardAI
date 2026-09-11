@@ -43,37 +43,17 @@ export function SecretTeamModal({ isOpen, onClose }) {
 
   return (
     <div 
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: 'rgba(9, 13, 22, 0.75)',
-        backdropFilter: 'blur(6px)',
-        zIndex: 9999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1.5rem',
-        animation: 'fadeIn 0.2s ease-out'
-      }}
+      className="modal-overlay"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div 
+        className="modal-card"
         style={{
-          background: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-lg)',
-          width: '100%',
           maxWidth: isUnlocked ? '1100px' : '440px',
           maxHeight: '90vh',
-          overflowY: 'auto',
-          boxShadow: 'var(--shadow-lg)',
-          padding: '1.75rem',
-          position: 'relative'
+          overflowY: 'auto'
         }}
       >
         {/* Close Modal Button */}

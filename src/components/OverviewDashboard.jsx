@@ -309,8 +309,8 @@ export function OverviewDashboard({
         </div>
       )}
 
-      {/* 3. Main Operational 2-Column Layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '1.25rem' }}>
+      {/* 3. Main Operational 2-Column Layout (Responsive Stack on Mobile) */}
+      <div className="overview-main-grid">
         {/* Left Column: Interactive GIS Map & Live Chart */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {/* Integrated Interactive GIS Map */}

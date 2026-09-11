@@ -488,9 +488,29 @@ button, input, select, textarea {
   gap: 1rem;
 }
 
+.overview-main-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 1.25rem;
+}
+
+.rig-sim-grid {
+  display: grid;
+  grid-template-columns: 1.65fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
 @media (max-width: 1024px) {
-  .grid-2col, .grid-3col, .grid-4col {
+  .grid-2col, .grid-3col, .grid-4col, .overview-main-grid, .rig-sim-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-4col {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }
 
@@ -733,3 +753,316 @@ button, input, select, textarea {
   gap: 1rem;
   margin-top: auto;
 }
+
+/* ==========================================================================
+   Mobile Compatibility & Responsive Enhancements (Phones & Tablets)
+   ========================================================================== */
+
+/* Leaflet Map Responsive Viewport & Overlays */
+.map-viewport-container {
+  position: relative;
+  width: 100%;
+  height: 560px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.map-node-drawer {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 320px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 0.9rem;
+  box-shadow: var(--shadow-lg);
+  z-index: 500;
+  pointer-events: auto;
+  transition: var(--transition);
+}
+
+.map-legend-box {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: var(--bg-secondary);
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  font-size: 0.72rem;
+  z-index: 500;
+  pointer-events: auto;
+  transition: var(--transition);
+}
+
+.map-legend-toggle-btn {
+  display: none;
+}
+
+.map-controls-row {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Base Modal Styles */
+.modal-backdrop, .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(9, 13, 22, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  padding: 1.5rem;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  gap: 0.75rem;
+}
+
+/* Tablet & Mobile Breakpoint (<= 768px) */
+@media (max-width: 768px) {
+  /* Layout & Padding */
+  .main-content {
+    padding: 0.85rem 0.65rem;
+  }
+
+  .card {
+    padding: 0.95rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .card-header > div:last-child {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  /* Top Navbar */
+  .top-navbar {
+    padding: 0.65rem 0.75rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+
+  .nav-brand-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .brand-title {
+    font-size: 1.1rem;
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+
+  .nav-actions-group {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+  }
+
+  .mode-switch-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mode-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 0.35rem 0.35rem;
+    font-size: 0.72rem;
+  }
+
+  .mine-select-wrapper {
+    flex: 1 1 130px;
+  }
+
+  .mine-select-wrapper select {
+    width: 100%;
+    font-size: 0.78rem;
+  }
+
+  .status-badge {
+    font-size: 0.68rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .btn-siren {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.6rem;
+  }
+
+  /* Main Navigation Tabs */
+  .main-nav-tabs {
+    padding: 0 0.65rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-btn {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.8rem;
+  }
+
+  /* Scenario Control Bar */
+  .scenario-bar {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.65rem 0.75rem;
+    scrollbar-width: none;
+  }
+
+  .scenario-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scenario-chip {
+    flex-shrink: 0;
+  }
+
+  /* Leaflet Map on Mobile */
+  .map-viewport-container {
+    height: clamp(380px, 55vh, 480px);
+  }
+
+  .map-controls-row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 3px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    width: 100%;
+  }
+
+  .map-controls-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .map-controls-row > * {
+    flex-shrink: 0;
+  }
+
+  /* Dock selected node drawer to bottom of map */
+  .map-node-drawer {
+    top: auto;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-height: 62%;
+    overflow-y: auto;
+    padding: 0.75rem;
+    z-index: 600;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    border-radius: var(--radius-md);
+  }
+
+  /* Make legend a toggle pill or compact overlay */
+  .map-legend-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-md);
+    font-size: 0.72rem;
+    font-weight: 600;
+    z-index: 500;
+    cursor: pointer;
+    color: var(--text-primary);
+  }
+
+  .map-legend-box {
+    bottom: auto;
+    top: 44px;
+    left: 10px;
+    max-width: 250px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.68rem;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .map-legend-box.mobile-hidden {
+    display: none;
+  }
+
+  /* Modals */
+  .modal-overlay {
+    padding: 0.65rem !important;
+  }
+
+  .modal-card {
+    padding: 1rem !important;
+    max-height: 92vh !important;
+  }
+
+  /* Footer */
+  .app-footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 1rem 0.75rem;
+  }
+}
+
+/* Small Phones Breakpoint (<= 480px) */
+@media (max-width: 480px) {
+  .stat-val {
+    font-size: 1.25rem;
+  }
+
+  .brand-title {
+    font-size: 1rem;
+  }
+
+  .nav-logo-badge {
+    width: 34px;
+    height: 34px;
+  }
+}
+

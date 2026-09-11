@@ -11,7 +11,10 @@ import {
   Globe, 
   Compass,
   AlertTriangle,
-  Info
+  Info,
+  X,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 export function GISMeshMap({ 
@@ -30,6 +33,7 @@ export function GISMeshMap({
   const [showMeshLinks, setShowMeshLinks] = useState(true);
   const [showHeatmap, setShowHeatmap] = useState(true);
   const [showUndergroundPanel, setShowUndergroundPanel] = useState(true);
+  const [isLegendOpen, setIsLegendOpen] = useState(false);
 
   // Initialize or re-center Leaflet Map when activeMine changes
   useEffect(() => {
@@ -344,7 +348,7 @@ export function GISMeshMap({
         </div>
 
         {/* Map Type & Layer Toggles */}
-        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="map-controls-row">
           {/* Base Map Selector */}
           <div style={{ display: 'flex', background: 'var(--bg-tertiary)', padding: '0.2rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
             <button 
@@ -427,6 +431,7 @@ export function GISMeshMap({
               padding: '0.65rem 1rem',
               marginBottom: '0.85rem',
               display: 'flex',
+              flexWrap: 'wrap',
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '0.75rem',
@@ -438,7 +443,7 @@ export function GISMeshMap({
                   CRITICAL SUBSIDENCE FAULT ZONE: Nodes {criticalNodes.map(n => n.id).join(', ')} Breached DGMS Safe Limits (Tilt &gt;0.8°, Crack &gt;7mm)!
                 </span>
               </div>
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
                 {criticalNodes.slice(0, 4).map(cn => (
                   <button 
                     key={cn.id}
@@ -468,6 +473,7 @@ export function GISMeshMap({
               padding: '0.55rem 1rem',
               marginBottom: '0.85rem',
               display: 'flex',
+              flexWrap: 'wrap',
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: '0.75rem'
@@ -478,7 +484,7 @@ export function GISMeshMap({
                   SECONDARY CREEP DETECTED: Nodes {warningNodes.map(n => n.id).join(', ')} showing micro-tilt drift.
                 </span>
               </div>
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
                 {warningNodes.slice(0, 3).map(wn => (
                   <button 
                     key={wn.id}
@@ -497,77 +503,110 @@ export function GISMeshMap({
       })()}
 
       {/* Main Leaflet Map Viewport */}
-      <div style={{ position: 'relative', width: '100%', height: '560px', borderRadius: 'var(--radius-md)', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+      <div className="map-viewport-container">
         <div 
           ref={mapContainerRef} 
           style={{ width: '100%', height: '100%', zIndex: 1 }}
         />
 
-        {/* Floating Map Legend (Bottom-Left) */}
-        <div 
-          style={{
-            position: 'absolute',
-            bottom: '16px',
-            left: '16px',
-            background: 'var(--bg-secondary)',
-            padding: '0.65rem 0.85rem',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--border-color)',
-            boxShadow: 'var(--shadow-lg)',
-            fontSize: '0.72rem',
-            zIndex: 500,
-            pointerEvents: 'auto'
-          }}
+        {/* Legend Toggle Button (Mobile & Quick-Access) */}
+        <button 
+          className="map-legend-toggle-btn"
+          onClick={() => setIsLegendOpen(prev => !prev)}
+          title="Toggle GIS Map Legend"
+          aria-label="Toggle GIS Map Legend"
         >
-          <div style={{ fontWeight: 700, marginBottom: '0.3rem', color: 'var(--text-primary)' }}>
-            GIS Layer Legend
+          <Layers size={13} />
+          <span>GIS Legend</span>
+          {isLegendOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+        </button>
+
+        {/* Floating Map Legend (Bottom-Left on Desktop, Collapsible on Mobile) */}
+        <div 
+          className={`map-legend-box ${!isLegendOpen ? 'mobile-hidden' : ''}`}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+            <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
+              GIS Layer Legend
+            </div>
+            <button 
+              onClick={() => setIsLegendOpen(false)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+                padding: '2px',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+              title="Close Legend"
+              aria-label="Close Legend"
+            >
+              <X size={13} />
+            </button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#10b981' }}></span>
+              <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#10b981', flexShrink: 0 }}></span>
               <span>Stable Surface Node (&lt;0.17° Tilt)</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#f59e0b' }}></span>
+              <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#f59e0b', flexShrink: 0 }}></span>
               <span>Warning Node (Secondary Creep)</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#ef4444' }}></span>
+              <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#ef4444', flexShrink: 0 }}></span>
               <span>Critical Node (Tertiary Acceleration)</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ width: '14px', height: '2px', background: '#06b6d4' }}></span>
+              <span style={{ width: '14px', height: '2px', background: '#06b6d4', flexShrink: 0 }}></span>
               <span>ESP-NOW Dense Cluster Link</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ width: '14px', height: '2px', background: '#0284c7', borderTop: '1px dashed' }}></span>
+              <span style={{ width: '14px', height: '2px', background: '#0284c7', borderTop: '1px dashed', flexShrink: 0 }}></span>
               <span>LoRa 868MHz Regional Mesh Hop</span>
             </div>
           </div>
         </div>
 
-        {/* Selected Node Floating Drawer (Top-Right) */}
+        {/* Selected Node Floating Drawer (Top-Right on Desktop, Docked Bottom Sheet on Mobile) */}
         {selectedNode && (
           <div 
+            className="map-node-drawer"
             style={{
-              position: 'absolute',
-              top: '16px',
-              right: '16px',
-              width: '310px',
-              background: 'var(--bg-card)',
               border: selectedNode.status === 'CRITICAL' ? '2px solid #ef4444' : (selectedNode.status === 'WARNING' ? '2px solid #f59e0b' : '1px solid var(--border-color)'),
-              borderRadius: 'var(--radius-md)',
-              padding: '0.9rem',
-              boxShadow: selectedNode.status === 'CRITICAL' ? '0 0 20px rgba(239, 68, 68, 0.4)' : 'var(--shadow-lg)',
-              zIndex: 500,
-              pointerEvents: 'auto'
+              boxShadow: selectedNode.status === 'CRITICAL' ? '0 0 20px rgba(239, 68, 68, 0.4)' : 'var(--shadow-lg)'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-              <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{selectedNode.name}</div>
-              <span className={`badge ${selectedNode.status === 'CRITICAL' ? 'badge-critical' : (selectedNode.status === 'WARNING' ? 'badge-warning' : 'badge-safe')}`}>
-                {disabledNodeIds.includes(selectedNode.id) ? 'OFFLINE' : selectedNode.status}
-              </span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', minWidth: 0, overflow: 'hidden' }}>
+                <div style={{ fontWeight: 700, fontSize: '0.88rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {selectedNode.name}
+                </div>
+                <span className={`badge ${selectedNode.status === 'CRITICAL' ? 'badge-critical' : (selectedNode.status === 'WARNING' ? 'badge-warning' : 'badge-safe')}`}>
+                  {disabledNodeIds.includes(selectedNode.id) ? 'OFFLINE' : selectedNode.status}
+                </span>
+              </div>
+              <button 
+                onClick={() => onSelectNode(null)}
+                style={{
+                  background: 'var(--bg-tertiary)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  padding: '3px 6px',
+                  borderRadius: 'var(--radius-sm)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}
+                title="Dismiss Details (Clear Selection)"
+                aria-label="Close"
+              >
+                <X size={14} />
+              </button>
             </div>
 
             {selectedNode.status === 'CRITICAL' && (

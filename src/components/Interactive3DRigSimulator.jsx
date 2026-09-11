@@ -1523,8 +1523,8 @@ export function Interactive3DRigSimulator({
         </div>
       </div>
 
-      {/* Main Simulation Viewport: 2-Column Layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.65fr 1fr', gap: '1.25rem', alignItems: 'start' }}>
+      {/* Main Simulation Viewport: 2-Column Layout (Responsive Stack on Mobile) */}
+      <div className="rig-sim-grid">
         {/* LEFT VIEWPORT: Canvas based on active sub-tab */}
         <div style={{
           background: '#090d16',
