@@ -455,7 +455,7 @@ export default function App() {
         setNodes(prevNodes => {
           const updated = getUpdatedNodesForScenario(prevNodes, currentScenario);
           setSelectedNode(curr => {
-            if (!curr) return updated[4];
+            if (!curr) return null;
             return updated.find(n => n.id === curr.id) || curr;
           });
           return updated;
