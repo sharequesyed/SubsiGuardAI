@@ -281,6 +281,38 @@ export function HardwareStudio() {
             </tbody>
           </table>
         </div>
+
+        {/* Industrial CapEx & ROI Economics */}
+        <div style={{ marginTop: '1.25rem', padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--brand-primary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              💰 Industrial Unit Economics & CapEx ROI Comparison
+            </span>
+            <span className="badge badge-safe" style={{ fontSize: '0.7rem' }}>98% CHEAPER THAN RADAR</span>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', fontSize: '0.78rem' }}>
+            <div style={{ background: 'var(--bg-card)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>HACKATHON POC NODE</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>₹1,850 <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>($22)</span></div>
+              <div style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>COTS components for algorithm benchmark & protocol validation.</div>
+            </div>
+            <div style={{ background: 'var(--bg-card)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>INDUSTRIAL MESH NODE</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--brand-primary)' }}>₹6,500 <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>($78)</span></div>
+              <div style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>ATEX cast-alloy, Murata/ST MEMS, conformal-coated circuit.</div>
+            </div>
+            <div style={{ background: 'var(--bg-card)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>TOTAL 30-NODE MESH GRID</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10b981' }}>₹2.2 Lakhs <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>($2.6K)</span></div>
+              <div style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Complete pit coverage with edge gateway & cloud telemetry.</div>
+            </div>
+            <div style={{ background: 'var(--bg-card)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>LEGACY SLOPE RADAR (InSAR)</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ef4444' }}>₹1.5–3.0 Cr <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>($200K+)</span></div>
+              <div style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Single point-of-failure with severe line-of-sight blind spots.</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

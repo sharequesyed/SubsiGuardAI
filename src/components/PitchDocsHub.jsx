@@ -36,7 +36,7 @@ export function PitchDocsHub() {
     },
     {
       q: "How will electronic nodes survive Indian monsoons and thick coal dust with small solar panels?",
-      a: "Nodes are enclosed in IP67 polycarbonate housings with hydrophobic Gore-Tex breathing valves. They use a 3.2V 3200mAh LiFePO4 battery (chemically safe up to 60°C). By duty-cycling transmission to 60s and using 15µA deep sleep, average power consumption is just 0.8 mW—giving over 35 days of continuous runtime even under zero sunlight during heavy monsoons."
+      a: "Nodes are enclosed in IP67 polycarbonate housings with hydrophobic Gore-Tex breathing valves. They use an intrinsically safe 3.2V LiFePO4 battery buffer (chemically stable up to 60°C). By duty-cycling transmission and leveraging the 15µA ULP deep-sleep state, average active draw remains under 1 mW—maintaining resilience against extended periods of dust occlusion or heavy monsoon cloud cover."
     },
     {
       q: "Can Knothe's Subsidence Theory be applied to Indian geological conditions?",
@@ -45,6 +45,10 @@ export function PitchDocsHub() {
     {
       q: "Why are highways, villages, and railway lines situated directly above underground coal mines in India?",
       a: "In historic basins like Jharia and Raniganj, mining started over 150 years ago. Over decades, dense towns and national corridors (like NH-19 and the Dhanbad-Chandrapura rail line) grew directly over underground seams. Because surface evacuation is legally and economically complex, continuous real-time monitoring like SubsiGuard is the only viable way to protect civilians and national infrastructure."
+    },
+    {
+      q: "If we scale to industrial-grade components, won't the system cost increase significantly?",
+      a: "Even scaled to ATEX-certified cast enclosures and industrial MEMS (scaling unit cost from ₹1,850 to ~₹6,500), an entire 30-node industrial mine deployment costs ~₹2.2 Lakhs ($2,600 USD). In comparison, legacy Slope Stability Radar (InSAR) costs ₹1.5 to ₹3 Crore ($180K–$350K) and Total Stations cost ₹30+ Lakhs. SubsiGuard delivers 100% spatial coverage with zero blind spots at less than 2% of the capital expenditure of conventional radar systems."
     }
   ];
 
