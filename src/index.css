@@ -137,7 +137,7 @@ button, input, select, textarea {
 .top-navbar {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
@@ -806,20 +806,32 @@ button, input, select, textarea {
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-color);
+  isolation: isolate;
+  z-index: 10;
 }
 
 .map-node-drawer {
   position: absolute;
   top: 16px;
   right: 16px;
-  width: 320px;
+  width: min(320px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  overflow-y: auto;
   background: var(--bg-card);
   border-radius: var(--radius-md);
-  padding: 0.9rem;
+  padding: 0.85rem;
   box-shadow: var(--shadow-lg);
-  z-index: 500;
+  z-index: 400;
   pointer-events: auto;
   transition: var(--transition);
+}
+
+.map-node-drawer::-webkit-scrollbar {
+  width: 4px;
+}
+.map-node-drawer::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
 }
 
 .map-legend-box {
