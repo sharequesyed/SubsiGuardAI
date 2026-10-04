@@ -25,7 +25,7 @@ Traditional monitoring relies on **intermittent total-station surveys** or **sat
 | **Sampling Frequency** | Intermittent (Every 6–12 days or monthly) | **Continuous Real-Time (1 Hz edge stream)** |
 | **Failure Prediction** | Historical retrospective reporting | **Saito Inverse-Velocity ($1/v \to 0$) TTF Countdown** |
 | **False Alarm Rejection** | None (Raw noisy measurements) | **3-Stage DSP (15–50 Hz dumper tremor band-stop)** |
-| **Offline Reliability** | Dependent on cloud and external uplink | **72h Local SPI Flash + Direct Siren Relay (<100ms)** |
+| **Offline Reliability** | Dependent on cloud and external uplink | **Local SPI Flash Buffer + Direct Hardware Siren Relay** |
 | **Node Deployment Cost** | > ₹1,50,000 (Commercial GNSS/Inclinometers) | **< ₹2,100 per node (BOM optimized)** |
 | **Network Redundancy** | Single point of cellular failure | **865–868 MHz LoRa Multi-Hop Mesh (WPC compliant)** |
 
@@ -54,7 +54,7 @@ Traditional monitoring relies on **intermittent total-station surveys** or **sat
 [ EDGE PREDICTIVE ENGINE ]                                    [ INDEPENDENT FAIL-SAFE PATH ]
 • Saito / Fukuzono Inverse-Velocity ($1/v$)                   • Hardwired 110dB Pithead Siren Relay
 • Knothe Empirical Basin Cross-Section                        • Triggered directly if threshold breached
-• 3-Layer Spatial Verification ($\ge 2$ Nodes)                • Zero internet dependency (<100ms latency)
+• 3-Layer Spatial Verification ($\ge 2$ Nodes)                • Direct hardware relay with zero internet dependency
         │
         ▼
 [ DISPATCH & DASHBOARD ]
@@ -71,7 +71,7 @@ Traditional monitoring relies on **intermittent total-station surveys** or **sat
 SubsiGuard implements geomechanical rock-fracture physics based on **Saito's creep rupture law** and **Fukuzono's inverse-velocity method**:
 $$\lim_{t \to t_f} \frac{1}{v(t)} = \lim_{t \to t_f} \left(\frac{ds}{dt}\right)^{-1} = 0$$
 - In tertiary accelerating creep, ground velocity $v$ surges asymptotically.
-- By tracking the linear descent of $1/v$ against time, the system computes the exact **Time-to-Failure ($t_f$)** countdown hours before catastrophic cave-in, enabling scheduled mine evacuations.
+- By tracking the linear descent of $1/v$ against time, the system computes dynamic **Time-to-Failure ($t_f$)** countdown projections during tertiary accelerating creep before catastrophic cave-in, enabling scheduled mine evacuations.
 
 ### 2. 3-Layer Intelligent False Alarm Discrimination
 To prevent costly false evacuations caused by surface mining equipment:
@@ -81,7 +81,7 @@ To prevent costly false evacuations caused by surface mining equipment:
 
 ### 3. Dual-Path Hardware Fail-Safe
 - **Edge Analytics Path**: Full statistical and predictive telemetry streamed to the Web GIS dashboard.
-- **Direct Hardware Interlock**: An independent hardware GPIO relay triggers a pithead warning horn within **<100ms** if raw tilt exceeds $0.57^\circ$ or crack width exceeds $5.0\text{ mm}$, guaranteeing life safety even during catastrophic telecom failure.
+- **Direct Hardware Interlock**: An independent hardware GPIO relay triggers a pithead warning horn immediately via hardware interrupt if raw tilt exceeds $0.57^\circ$ or crack width exceeds $5.0\text{ mm}$, guaranteeing life safety even during catastrophic telecom failure.
 
 ### 4. Live Physical Prototype Integration via Web Serial
 - Plug-and-play hardware demonstration firmware included in [`ESP32/subsiguard_demo/`](./ESP32/subsiguard_demo/).
@@ -102,7 +102,7 @@ SubsiGuard is engineered for rapid, cost-effective scaling across remote Indian 
 | **Crack Sensor** | Strain Gauge Module | Continuous fissure opening detection | ₹200 |
 | **LoRa Module** | SX1276 (865–868 MHz) | Sub-GHz long-range wireless multi-hop mesh (3–5 km) | ₹350 |
 | **GPS Module (Optional)** | Neo-6M | Satellite positioning for initial spatial coordinates | ₹200 |
-| **Power Management** | TP4056 + Lithium Battery | Charge controller & 72h zero-sunlight energy buffer | ₹250 |
+| **Power Management** | TP4056 + Lithium Battery | Charge controller & rechargeable battery buffer for off-grid operations | ₹250 |
 | **Solar Panel (5W) + Enclosure** | 5W Solar + Weatherproof Enclosure | Continuous solar harvesting + rugged dust/rain protection | ₹200 |
 | **TOTAL (APPROX.)** | | | **~ ₹2,100 per node** |
 
@@ -132,7 +132,7 @@ SubsiGuard is engineered for rapid, cost-effective scaling across remote Indian 
 │   │   └── Interactive3DRigSimulator.jsx # 2.5D strata flexure & 3D circuit rig
 │   ├── services/
 │   │   ├── usbGateway.js              # Web Serial API driver & prototype synchronization
-│   │   ├── offlineStorage.js          # IndexedDB 72-hour offline telemetry cache
+│   │   ├── offlineStorage.js          # IndexedDB local offline telemetry cache
 │   │   ├── soundEffects.js            # Synthesized Web Audio siren and alert beeps
 │   │   └── notificationService.js     # Desktop emergency notification service
 │   ├── utils/

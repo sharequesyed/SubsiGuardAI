@@ -275,9 +275,9 @@ def create_presentation(output_path):
 
     right_bullets = [
         ("1 Hz Continuous Surface Telemetry", "Synchronized MPU-6050 dual-axis inclination (±0.05° precision) and linear crack extensometers continuously recording ground deformation."),
-        ("Edge AI Saito Inverse-Velocity Prediction", "Real-time failure forecasting running on-chip (1/v -> 0); calculates exact Time-to-Failure (Tf) hours ahead of ground collapse."),
-        ("Ultra Low-Cost Resilient Mesh Architecture", "Sub-₹2,500 per node with 868MHz long-range LoRa P2P mesh; solar MPPT + LiFePO4 battery ensuring 35-day uninterrupted off-grid autonomy."),
-        ("Autonomous Fail-Safe Life Safety Dispatch", "Direct hardwired relay trip to pithead sirens (<100ms) with zero cloud dependency, backed by localized multi-lingual SMS evacuation geo-fencing.")
+        ("Edge AI Saito Inverse-Velocity Prediction", "Real-time failure forecasting running on-chip (1/v -> 0); dynamic Time-to-Failure (Tf) projections during tertiary accelerating creep."),
+        ("Ultra Low-Cost Resilient Mesh Architecture", "Sub-₹2,500 per node with 868MHz long-range LoRa P2P mesh; solar MPPT + LiFePO4 battery ensuring extended off-grid autonomy."),
+        ("Autonomous Fail-Safe Life Safety Dispatch", "Direct hardwired relay trip to pithead sirens with zero cloud dependency, backed by localized multi-lingual SMS evacuation geo-fencing.")
     ]
     for title, desc in right_bullets:
         p = tf_r.add_paragraph()
@@ -354,7 +354,7 @@ def create_presentation(output_path):
         ]),
         ("2. 4-TIER WORKFLOW MIND MAP", [
             ("Layer 1 (Sensing)", "100Hz IMU tilt & linear crack dilation."),
-            ("Layer 2 (Mesh)", "868MHz LoRa mesh with 72h offline SPI buffer."),
+            ("Layer 2 (Mesh)", "868MHz LoRa mesh with local offline SPI buffer."),
             ("Layer 3 (Edge AI)", "Saito 1/v -> 0 prediction & 3-layer dumper filter."),
             ("Layer 4 (Life Safety)", "Direct pithead sirens & geo-fenced SMS.")
         ]),
@@ -494,9 +494,9 @@ def create_presentation(output_path):
 
     solutions = [
         ("IP67 Rugged Enclosure + Gore-Tex Vent", "Hermetically sealed ABS housing with hydrophobic Gore-Tex breather membrane prevents internal condensation and dust entry."),
-        ("Multi-Hop 868MHz LoRa Mesh + SPI Buffer", "Dynamic packet leapfrogging across node mesh with 72-hour offline SPI flash ring buffer ensuring 0% data loss during outages."),
+        ("Multi-Hop 868MHz LoRa Mesh + SPI Buffer", "Dynamic packet leapfrogging across node mesh with local offline SPI flash ring buffer preventing telemetry loss during backhaul outages."),
         ("3-Layer Edge DSP Noise Rejection", "Digital bandstop notch filter (15-50Hz truck harmonics) + 3.5s tilt persistence verification reliably eliminates false alarms."),
-        ("Solar MPPT + 6000mAh LiFePO4 Chemistry", "Integrated mono-crystalline solar harvesting with LiFePO4 cells delivering 35 days of continuous power without direct sunlight.")
+        ("Solar MPPT + LiFePO4 Chemistry", "Integrated mono-crystalline solar harvesting with LiFePO4 cells delivering extended off-grid operational autonomy.")
     ]
     for title, desc in solutions:
         p = tf4_r.add_paragraph()

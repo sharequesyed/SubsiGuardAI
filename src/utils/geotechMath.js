@@ -51,7 +51,7 @@ export function estimateTimeToFailure(velocityHistory, currentTiltX = 0.04, curr
 
   if (currentTiltX <= 0.57 && currentStrain <= 5.0) {
     const progress = (currentTiltX - 0.20) / (0.57 - 0.20);
-    const hours = Math.max(12, Math.round(72 - progress * 60));
+    const hours = Math.max(8, Math.round(36 - progress * 24));
     return {
       ttfHours: hours,
       displayStr: `${hours}h`,
